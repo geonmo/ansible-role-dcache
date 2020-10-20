@@ -1,0 +1,15 @@
+---
+# tasks file for geonmo.ansible-dcache
+- name: Checking dcache package
+  package_facts:
+    manager: auto
+
+- name: Install dcache package
+  yum:
+    name: https://www.dcache.org/old/downloads/1.9/repo/6.2/dcache-6.2.6-1.noarch.rpm
+    state: present
+  when: "'dcache' not in ansible_facts.packages"
+
+- name: Configure dcache
+  include_tasks: "{{ type }}.yml"
+

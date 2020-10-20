@@ -1,0 +1,6 @@
+- name: Configure client
+  yum: 
+    name: 
+      - xrootd-client
+      - xrootd-fuse
+    state: present

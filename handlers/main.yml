@@ -1,0 +1,14 @@
+---
+# handlers file for geonmo.dcache
+- name: init db
+  command: /usr/pgsql-10/bin/postgresql-10-setup initdb
+- name: restart db
+  service:
+    name: postgresql-10
+    state: restarted
+- name: dcache db update
+  command: /usr/bin/dcache database update
+- name: restart dcache
+  service: 
+    name: dcache.target
+    state: restarted

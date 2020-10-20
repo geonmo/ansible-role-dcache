@@ -1,0 +1,86 @@
+- name: Configure gplazma.conf
+  yum:
+    name:
+      - java-11-openjdk-headless 
+      - httpd-tools
+    state: present
+- name: checking yum repo
+  stat:
+    path: /etc/yum.repos.d/pgdg-redhat-all.repo
+  register: stat_yum_repo
+- yum: 
+    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    state: present
+  when: not stat_yum_repo.stat.exists
+- yum: 
+    name: postgresql10-server
+    state: present
+  notify:
+    - init db
+- copy: 
+    dest: /var/lib/pgsql/10/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    content: "local   all             all                                     trust\n
+host    all             all             127.0.0.1/32            trust\n
+host    all             all             ::1/128                 trust\n
+"  
+  notify: 
+    - restart db
+- community.general.postgresql_user:
+    name: dcache
+    role_attr_flags: CREATEDB
+- community.general.postgresql_db:
+    name: chimera
+    login_user: dcache
+ 
+- copy: 
+    dest: /etc/dcache/gplazma.conf
+    owner: dcache
+    group: dcache
+    mode: "0644"
+    content:  "auth     sufficient  htpasswd\n
+map      sufficient  multimap\n
+account  requisite   banfile\n
+session  requisite   authzdb\n
+"
+- community.general.htpasswd:
+    path: /etc/dcache/htpasswd
+    name: vagrant
+    password: vagrant
+    owner: dcache
+    group: dcache
+    mode: 0640
+- name: create /etc/grid-security directory
+  file:
+    path: /etc/grid-security
+    state: directory
+    owner: root
+    group: root
+- copy:
+    dest: /etc/grid-security/storage-authzdb
+    owner: dcache
+    group: dcache
+    content: "version2.1\n
+
+authorize vagrant read-write 1000 1000 / /\n
+"
+- copy:
+    dest: /etc/dcache/multi-mapfile
+    owner: dcache
+    group: dcache
+    content: "username:vagrant uid:1000 gid:1000, true\n"
+- copy:
+    dest: /etc/dcache/dcache.conf
+    owner: dcache
+    group: dcache
+    mode: "0644"
+    content: "dcache.layout=benchmark\n"
+- template: 
+    src: benchmark.conf.j2
+    dest: /etc/dcache/layouts/benchmark.conf
+    owner: dcache
+    group: dcache
+    mode: "0644"
+  notify: restart dcache 
+    

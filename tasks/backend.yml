@@ -1,0 +1,26 @@
+- copy:
+    dest: /etc/dcache/dcache.conf
+    owner: dcache
+    group: dcache
+    mode: "0644"
+    content: "dcache.layout=pool\n"
+- template: 
+    src: pool.conf.j2
+    dest: /etc/dcache/layouts/pool.conf
+    owner: dcache
+    group: dcache
+    mode: "0644"
+  notify: restart dcache
+- file:
+    path: /mnt/dcache/data
+    owner: dcache
+    group: dcache
+    mode: '0755'
+    recurse: true
+- mount:
+    path: /mnt/dcache/data
+    src: tmpfs
+    fstype: tmpfs
+    opts: defaults,size=4G
+    state: mounted 
+ 
