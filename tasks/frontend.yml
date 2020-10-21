@@ -25,15 +25,26 @@
 host    all             all             127.0.0.1/32            trust\n
 host    all             all             ::1/128                 trust\n
 "  
-  notify: 
-    - restart db
+- name: Start DB server 
+  service:
+    name: postgresql-10
+    state: started
 - community.general.postgresql_user:
     name: dcache
     role_attr_flags: CREATEDB
 - community.general.postgresql_db:
     name: chimera
     login_user: dcache
- 
+- community.general.postgresql_db:
+    name: pinmanager
+    login_user: dcache
+
+- copy:
+    dest: /etc/dcache/ban.conf
+    owner: dcache
+    group: dcache
+    content: ""
+    mode: "0644" 
 - copy: 
     dest: /etc/dcache/gplazma.conf
     owner: dcache
@@ -51,6 +62,13 @@ session  requisite   authzdb\n
     owner: dcache
     group: dcache
     mode: 0640
+- community.general.htpasswd:
+    path: /etc/dcache/htpasswd
+    name: admin
+    password: admin
+    owner: dcache
+    group: dcache
+    mode: 0640
 - name: create /etc/grid-security directory
   file:
     path: /etc/grid-security
@@ -61,15 +79,17 @@ session  requisite   authzdb\n
     dest: /etc/grid-security/storage-authzdb
     owner: dcache
     group: dcache
-    content: "version2.1\n
+    content: "version 2.1\n
 
-authorize vagrant read-write 1000 1000 / /\n
+authorize vagrant read-write 1000 1000 /home/vagrant /\n
+authorize admin read-write 0 0 / /\n
 "
 - copy:
     dest: /etc/dcache/multi-mapfile
     owner: dcache
     group: dcache
-    content: "username:vagrant uid:1000 gid:1000, true\n"
+    content: "username:vagrant uid:1000 gid:1000,true\n
+username:admin uid:0 gid:0,true"
 - copy:
     dest: /etc/dcache/dcache.conf
     owner: dcache
@@ -82,5 +102,6 @@ authorize vagrant read-write 1000 1000 / /\n
     owner: dcache
     group: dcache
     mode: "0644"
-  notify: restart dcache 
+- name: Restart dcache 
+  command: dcache restart
     

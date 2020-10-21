@@ -1,0 +1,7 @@
+dcache.zookeeper.connection = node1.intranet.local:2181
+dcache.systemd.strict=false
+[${host.name}-poolDomain]
+[${host.name}-poolDomain/pool]
+pool.name=${host.name}-pool
+pool.path=/mnt/dcache
+pool.wait-for-files=${pool.path}/data

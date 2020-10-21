@@ -10,7 +10,6 @@
     owner: dcache
     group: dcache
     mode: "0644"
-  notify: restart dcache
 - file:
     path: /mnt/dcache/data
     owner: dcache
@@ -23,4 +22,6 @@
     fstype: tmpfs
     opts: defaults,size=4G
     state: mounted 
+- name: Restart dcache
+  command: dcache restart
  
