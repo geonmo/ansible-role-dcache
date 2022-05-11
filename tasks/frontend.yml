@@ -13,6 +13,14 @@
     name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
     state: present
   when: not stat_yum_repo.stat.exists
+- name: Install python2-passlib for hpasswd 
+  yum:
+    name:  python2-passlib
+    state: present
+- name: Install psycopg2 for postgresql control. 
+  yum:
+    name:  python-psycopg2
+    state: present
 - name: Install PostgreSQL 10 Server
   yum: 
     name: postgresql10-server
