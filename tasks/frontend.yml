@@ -95,10 +95,10 @@ username:admin uid:0 gid:0,true"
     owner: dcache
     group: dcache
     mode: "0644"
-    content: "dcache.layout=benchmark\n"
+    content: "dcache.layout=nonpool\n"
 - template: 
-    src: benchmark.conf.j2
-    dest: /etc/dcache/layouts/benchmark.conf
+    src: nonpool.conf.j2
+    dest: /etc/dcache/layouts/nonpool.conf
     owner: dcache
     group: dcache
     mode: "0644"
