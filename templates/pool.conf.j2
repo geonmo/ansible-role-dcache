@@ -3,5 +3,5 @@ dcache.systemd.strict=false
 [${host.name}-poolDomain]
 [${host.name}-poolDomain/pool]
 pool.name=${host.name}-pool
-pool.path=/mnt/dcache
+pool.path={{ volume_path }}
 pool.wait-for-files=${pool.path}/data
