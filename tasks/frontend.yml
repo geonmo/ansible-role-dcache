@@ -8,11 +8,21 @@
   stat:
     path: /etc/yum.repos.d/pgdg-redhat-all.repo
   register: stat_yum_repo
-- yum: 
+- name: Install PostgreSQL repository
+  yum: 
     name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
     state: present
   when: not stat_yum_repo.stat.exists
-- yum: 
+- name: Install python2-passlib for hpasswd 
+  yum:
+    name:  python2-passlib
+    state: present
+- name: Install psycopg2 for postgresql control. 
+  yum:
+    name:  python-psycopg2
+    state: present
+- name: Install PostgreSQL 10 Server
+  yum: 
     name: postgresql10-server
     state: present
   notify:
@@ -29,13 +39,13 @@ host    all             all             ::1/128                 trust\n
   service:
     name: postgresql-10
     state: started
-- community.general.postgresql_user:
+- community.postgresql.postgresql_user:
     name: dcache
     role_attr_flags: CREATEDB
-- community.general.postgresql_db:
+- community.postgresql.postgresql_db:
     name: chimera
     login_user: dcache
-- community.general.postgresql_db:
+- community.postgresql.postgresql_db:
     name: pinmanager
     login_user: dcache
 

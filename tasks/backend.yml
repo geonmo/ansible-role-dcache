@@ -10,18 +10,6 @@
     owner: dcache
     group: dcache
     mode: "0644"
-- file:
-    path: /mnt/dcache/data
-    owner: dcache
-    group: dcache
-    mode: '0755'
-    recurse: true
-- mount:
-    path: /mnt/dcache/data
-    src: tmpfs
-    fstype: tmpfs
-    opts: defaults,size=4G
-    state: mounted 
 - name: Restart dcache
   command: dcache restart
  
