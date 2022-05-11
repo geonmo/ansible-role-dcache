@@ -6,7 +6,7 @@
 
 - name: Install dcache package
   yum:
-    name: https://www.dcache.org/old/downloads/1.9/repo/6.2/dcache-6.2.6-1.noarch.rpm
+    name: https://www.dcache.org/old/downloads/1.9/repo/{{ dcache_version[0:3] }}/dcache-{{ dcache_version }}-1.noarch.rpm
     state: present
   when: "'dcache' not in ansible_facts.packages"
 
