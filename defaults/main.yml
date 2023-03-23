@@ -3,3 +3,4 @@
 psql_version: 15
 dcache_version: 8.2.17
 volume_path: /dcache_pool
+headnode: node1.private.lo
