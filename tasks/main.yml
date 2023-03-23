@@ -14,6 +14,25 @@
     name: https://www.dcache.org/old/downloads/1.9/repo/{{ dcache_version[0:3] }}/dcache-{{ dcache_version }}-1.noarch.rpm
     state: present
   when: "'dcache' not in ansible_facts.packages"
+- name: Check hostcert file
+  file: 
+    path: /etc/grid-security/hostcert.pem
+    owner: dcache
+    group: dcache
+    mode: "0644"
+- name: Check hostkey file
+  file: 
+    path: /etc/grid-security/hostkey.pem
+    owner: dcache
+    group: dcache
+    mode: "0400"
+- name: "Check {{ volume_path }}"
+  file:
+    path: "{{ volume_path }}"
+    owner: dcache
+    group: dcache
+    state: directory
+
 - name: Configure dcache
   include_tasks: "{{ type }}.yml"
 
