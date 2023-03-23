@@ -1,2 +1,5 @@
 ---
-# defaults file for geonmo.xrootd
+# defaults file for geonmo.dcache
+psql_version: 15
+dcache_version: 8.2.17
+volume_path: /dcache_pool

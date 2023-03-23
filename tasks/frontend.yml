@@ -1,5 +1,5 @@
-- name: Configure gplazma.conf
-  yum:
+- name: Configure Java JDK
+  package:
     name:
       - java-11-openjdk-headless 
       - httpd-tools
@@ -10,7 +10,7 @@
   register: stat_yum_repo
 - name: Install PostgreSQL repository
   yum: 
-    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_distribution_major_version }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
     state: present
   when: not stat_yum_repo.stat.exists
 - name: Install python2-passlib for hpasswd 
@@ -18,17 +18,17 @@
     name:  python2-passlib
     state: present
 - name: Install psycopg2 for postgresql control. 
-  yum:
+  package:
     name:  python-psycopg2
     state: present
-- name: Install PostgreSQL 10 Server
-  yum: 
-    name: postgresql10-server
+- name: "Install PostgreSQL {{ psql_version }} Server"
+  package: 
+    name: "postgresql{{ psql_version }}-server"
     state: present
   notify:
     - init db
 - copy: 
-    dest: /var/lib/pgsql/10/data/pg_hba.conf
+    dest: "/var/lib/pgsql/{{ psql_version }}/data/pg_hba.conf"
     owner: postgres
     group: postgres
     content: "local   all             all                                     trust\n
@@ -37,7 +37,7 @@ host    all             all             ::1/128                 trust\n
 "  
 - name: Start DB server 
   service:
-    name: postgresql-10
+    name: "postgresql-{{ psql_version }}"
     state: started
 - community.postgresql.postgresql_user:
     name: dcache
