@@ -1,15 +1,19 @@
 ---
-# tasks file for geonmo.ansible-dcache
+# tasks file for geonmo.dcache
+- name: Configure Java JDK
+  package:
+    name:
+      - java-11-openjdk-headless 
+      - httpd-tools
+    state: present
 - name: Checking dcache package
   package_facts:
     manager: auto
-
 - name: Install dcache package
   yum:
     name: https://www.dcache.org/old/downloads/1.9/repo/{{ dcache_version[0:3] }}/dcache-{{ dcache_version }}-1.noarch.rpm
     state: present
   when: "'dcache' not in ansible_facts.packages"
-
 - name: Configure dcache
   include_tasks: "{{ type }}.yml"
 
