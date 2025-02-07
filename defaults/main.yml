@@ -1,6 +1,7 @@
 ---
 # defaults file for geonmo.dcache
 psql_version: 15
-dcache_version: 8.2.17
-volume_path: /dcache_pool
+dcache_version: 9.2.22
+volume_paths: 
+  - {name:"lustre01-pool", path:"/dcache_pool"}
 headnode: node1.private.lo

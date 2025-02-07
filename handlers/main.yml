@@ -1,7 +1,5 @@
 ---
 # handlers file for geonmo.dcache
-- name: init db
-  command: /usr/pgsql-{{ psql_version }}/bin/postgresql-{{ psql_version }}-setup initdb
 - name: restart db
   service:
     name: postgresql-{{ psql_version }}
